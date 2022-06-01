@@ -1,49 +1,52 @@
 var button = document.getElementById("enter");
 var input = document.getElementById("userinput");
 var ul = document.querySelector("ul");
-var listItem = document.querySelector("li");
-var deleteBtn = document.getElementById("delete-btn");
 
 function inputLength() {
   return input.value.length;
 }
+
 function createElementList(){
   var li = document.createElement("li");
+  var deleteButton = document.createElement("button");
+  
   li.appendChild(document.createTextNode(input.value + " "));
   ul.appendChild(li);
-  
-  var deleteButton = li.appendChild(document.createElement("button"));
+  li.appendChild(deleteButton);
   deleteButton.appendChild(document.createTextNode("Delete"));
-
-  li.addEventListener("click", function(){
-    this.classList.toggle("done");
-  })
-
-  deleteButton.addEventListener("click", function(){
-    this.parentElement.remove();
-  })
-  
+  deleteButton.setAttribute("id", "delete-btn");
   input.value = "";
-
 }
+
 function addListAfterClick(){
   if(inputLength() > 0){
     createElementList();
   }
 }
+
 function addListAfterKeypress(event){
   if(inputLength() > 0 && event.keyCode === 13){
     createElementList();
   }
 }
+
+function doneTask(e){
+  if(e.target.tagName.toLowerCase() === "li"){
+    e.target.classList.toggle("done");
+  }
+}
+
+function removeTask(e){
+  if(e.target.id === "delete-btn"){
+    e.target.parentElement.remove();
+  }
+}
+
+function handleUIClick(e){
+  doneTask(e);
+  removeTask(e);
+}
+
+ul.addEventListener("click", handleUIClick);
 button.addEventListener("click", addListAfterClick);
-
 input.addEventListener("keypress", addListAfterKeypress);
-
-listItem.addEventListener("click", function(){
-  this.classList.toggle("done");
-});
-
-deleteBtn.addEventListener("click", function(){
-  this.parentElement.remove();
-})
